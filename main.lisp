@@ -1,11 +1,17 @@
 (ql:quickload :cl-ppcre)
 (ql:quickload :babel)
 
+(defconstant declare-utf-8-message ";; -*- mode: fundamental; coding: utf-8 -*-" "declare of skk dictionary encoding is utf-8.")
+(defconstant declare-okuri-ari-line ";; okuri-ari entries."
+  "Declare that attribute of comment specify, that attribute spread below lines of that comment. If next comment appear, become end of that effect.")
+(defconstant declare-okuri-nasi-line ";; okuri-nasi entries."
+  "Declare that attribute of comment specify, that attribute spread below lines of that comment. If next comment appear, become end of that effect.")
+
 (defun split-from-tab (s)
   (let ((tmp (ppcre:split "\\t" s)))
     (if tmp
-        tmp
-        (list s))))
+        (format nil "~A /~A/" (car tmp) (cadr tmp))
+        "")))
 
 (defun split-from-line-code (s)
   (cl-ppcre:split #\linefeed s))
@@ -35,8 +41,18 @@
                           (return-from open-dic-txt 'error))))))
         (cl-ppcre:regex-replace-all #\return text "")))))
 
+(defun write-to-text-file (name l)
+  (with-open-file (out name
+                       :direction :output
+                       :if-exists :supersede)
+    (write-line declare-utf-8-message out)
+    (write-line declare-okuri-ari-line out)
+    (write-line declare-okuri-nasi-line out)
+    (dolist (x l)
+      (write-line x out))))
+
 (defun main ()
-  (let ((tmp (remove-comment-line (split-from-line-code (open-dic-txt "/home/kouf/Downloads/ime_dic/nicoime_msime.txt")))))
-    (print (length tmp))
-    (print (car tmp))
-    (print (car (mapcar #'split-from-tab tmp)))))
+  (let ((tmp (remove-comment-line (split-from-line-code (open-dic-txt "/home/kouf/Downloads/nicoime/nicoime_msime.txt")))))
+    (format t "~A~%" (length tmp))
+    (let ((result (mapcar #'split-from-tab tmp)))
+      (write-to-text-file "./test.dic" result))))

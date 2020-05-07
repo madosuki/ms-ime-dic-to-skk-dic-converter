@@ -1,11 +1,11 @@
 (ql:quickload :cl-ppcre)
 (ql:quickload :babel)
+(ql:quickload :alexandria)
+(ql:quickload :cl-fad)
 
-(defconstant declare-utf-8-message ";; -*- mode: fundamental; coding: utf-8 -*-" "declare of skk dictionary encoding is utf-8.")
-(defconstant declare-okuri-ari-line ";; okuri-ari entries."
-  "Declare that attribute of comment specify, that attribute spread below lines of that comment. If next comment appear, become end of that effect.")
-(defconstant declare-okuri-nasi-line ";; okuri-nasi entries."
-  "Declare that attribute of comment specify, that attribute spread below lines of that comment. If next comment appear, become end of that effect.")
+(alexandria:define-constant declare-utf-8-message ";; -*- mode: fundamental; coding: utf-8 -*-")
+(alexandria:define-constant declare-okuri-ari-line ";; okuri-ari entries.")
+(alexandria:define-constant declare-okuri-nasi-line ";; okuri-nasi entries.")
 
 (defun split-from-tab (s)
   (let ((tmp (ppcre:split "\\t" s)))
@@ -51,8 +51,14 @@
     (dolist (x l)
       (write-line x out))))
 
-(defun main ()
-  (let ((tmp (remove-comment-line (split-from-line-code (open-dic-txt "/home/kouf/Downloads/nicoime/nicoime_msime.txt")))))
-    (format t "~A~%" (length tmp))
-    (let ((result (mapcar #'split-from-tab tmp)))
-      (write-to-text-file "./test.dic" result))))
+(defun main (&rest argv)
+  (unless argv
+    (format t "Missing Arguments!~%")
+    (return-from main nil))
+  (dolist (x argv)
+    (when (and (cl-fad:file-exists-p x) (null (cl-fad:directory-exists-p x)))
+      (let ((tmp (remove-comment-line (split-from-line-code (open-dic-txt x)))))
+        (let ((result (mapcar #'split-from-tab tmp))
+              (out-name (format nil "~A.skkdic" x)))
+          (write-to-text-file out-name result)
+          (format t "Done! converted ~A to ~A~%~%" x out-name))))))

@@ -1,22 +1,11 @@
-(defpackage :ms-ime-dic-to-skk-dic
+(defpackage :ms-ime-dic-to-skk-dic-converter
   (:use :cl :cl-ppcre :babel)
   (:import-from :cl-fad
                 :file-exists-p
                 :directory-exists-p)
-  (:import-from :alexandria
-                :define-constant)
   (:export #:converter))
 
-(in-package :ms-ime-dic-to-skk-dic)
-
-;; (ql:quickload :cl-ppcre)
-;; (ql:quickload :babel)
-;; (ql:quickload :alexandria)
-;; (ql:quickload :cl-fad)
-
-;; (alexandria:define-constant declare-utf-8-message ";; -*- mode: fundamental; coding: utf-8 -*-")
-;; (alexandria:define-constant declare-okuri-ari-line ";; okuri-ari entries.")
-;; (alexandria:define-constant declare-okuri-nasi-line ";; okuri-nasi entries.")
+(in-package :ms-ime-dic-to-skk-dic-converter)
 
 (defparameter declare-utf-8-message ";; -*- mode: fundamental; coding: utf-8 -*-")
 (defparameter declare-okuri-ari-line ";; okuri-ari entries.")

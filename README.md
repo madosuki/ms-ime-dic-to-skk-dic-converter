@@ -5,7 +5,7 @@ Still alpha version.
 
 ## Install  
 ```
-ros install madosuki/ms-ime-dic-to-skk-dic-converter"
+ros install madosuki/ms-ime-dic-to-skk-dic-converter
 ```
 
 ## Run

@@ -1,11 +1,27 @@
-(ql:quickload :cl-ppcre)
-(ql:quickload :babel)
-(ql:quickload :alexandria)
-(ql:quickload :cl-fad)
+(defpackage :ms-ime-dic-to-skk-dic
+  (:use :cl :cl-ppcre :babel)
+  (:import-from :cl-fad
+                :file-exists-p
+                :directory-exists-p)
+  (:import-from :alexandria
+                :define-constant)
+  (:export #:converter))
 
-(alexandria:define-constant declare-utf-8-message ";; -*- mode: fundamental; coding: utf-8 -*-")
-(alexandria:define-constant declare-okuri-ari-line ";; okuri-ari entries.")
-(alexandria:define-constant declare-okuri-nasi-line ";; okuri-nasi entries.")
+(in-package :ms-ime-dic-to-skk-dic)
+
+;; (ql:quickload :cl-ppcre)
+;; (ql:quickload :babel)
+;; (ql:quickload :alexandria)
+;; (ql:quickload :cl-fad)
+
+;; (alexandria:define-constant declare-utf-8-message ";; -*- mode: fundamental; coding: utf-8 -*-")
+;; (alexandria:define-constant declare-okuri-ari-line ";; okuri-ari entries.")
+;; (alexandria:define-constant declare-okuri-nasi-line ";; okuri-nasi entries.")
+
+(defparameter declare-utf-8-message ";; -*- mode: fundamental; coding: utf-8 -*-")
+(defparameter declare-okuri-ari-line ";; okuri-ari entries.")
+(defparameter declare-okuri-nasi-line ";; okuri-nasi entries.")
+
 
 (defun split-from-tab (s)
   (let ((tmp (ppcre:split "\\t" s)))
@@ -51,11 +67,11 @@
     (dolist (x l)
       (write-line x out))))
 
-(defun main (&rest argv)
-  (unless argv
+(defun converter (l)
+  (unless l
     (format t "Missing Arguments!~%")
-    (return-from main nil))
-  (dolist (x argv)
+    (return-from converter nil))
+  (dolist (x l)
     (when (and (cl-fad:file-exists-p x) (null (cl-fad:directory-exists-p x)))
       (let ((tmp (remove-comment-line (split-from-line-code (open-dic-txt x)))))
         (let ((result (mapcar #'split-from-tab tmp))

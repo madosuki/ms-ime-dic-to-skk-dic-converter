@@ -1,7 +1,7 @@
-(defpackage :ms-ime-dic-to-skk-dic
+(defpackage :ms-ime-dic-to-skk-dic-asd
   (:use :cl :asdf))
 
-(in-package :ms-ime-dic-to-skk-dic)
+(in-package :ms-ime-dic-to-skk-dic-asd)
 
 (defsystem :ms-ime-dic-to-skk-dic
   :name "ms-ime-dic-to-skk-dic"
